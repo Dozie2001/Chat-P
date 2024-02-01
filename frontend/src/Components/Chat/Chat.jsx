@@ -7,20 +7,21 @@ import Messages from '../Messages/Messages.jsx';
 import InfoBar from '../InfoBar/InfoBar.jsx';
 import Input from '../Input/Input.jsx';
 
+
 import './Chat.css';
 
 const ENDPOINT = 'http://localhost:5001'; // Corrected the ENDPOINT value
 
 let socket;
 
-const Chat = ({ location }) => {
+const Chat = ({  }) => {
   const [name, setName] = useState('');
   const [room, setRoom] = useState('');
   const [users, setUsers] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
 
-  useEffect(() => {
+  useEffect((location) => {
     console.log('Location:', location);
     const { name, room } = queryString.parse(window.location.search);
 
@@ -34,7 +35,7 @@ const Chat = ({ location }) => {
         alert(error);
       }
     });
-  }, [ENDPOINT, location.search]);
+  }, [ENDPOINT, window.location.search]);
   
   useEffect(() => {
     socket.on('message', message => {
