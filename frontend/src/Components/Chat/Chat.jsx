@@ -2,28 +2,27 @@ import React, { useState, useEffect } from "react";
 import queryString from 'query-string';
 import io from "socket.io-client";
 
-import TextContainer from '../TextContainer/TextContainer.jsx';
-import Messages from '../Messages/Messages.jsx';
-import InfoBar from '../InfoBar/InfoBar.jsx';
-import Input from '../Input/Input.jsx';
 
+import TextContainer from '../TextContainer/TextContainer';
+import Messages from '../Messages/Messages';
+import InfoBar from '../InfoBar/InfoBar';
+import Input from '../Input/Input';
 
 import './Chat.css';
 
-const ENDPOINT = 'http://localhost:5001'; // Corrected the ENDPOINT value
+const ENDPOINT = 'http://localhost:5001'
 
 let socket;
 
-const Chat = ({  }) => {
+const Chat = ({ }) => {
   const [name, setName] = useState('');
   const [room, setRoom] = useState('');
   const [users, setUsers] = useState('');
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
 
-  useEffect((location) => {
-    console.log('Location:', location);
-    const { name, room } = queryString.parse(window.location.search);
+  useEffect(() => {
+    const { name, room } = queryString.parse(location.search);
 
     socket = io(ENDPOINT);
 
@@ -35,7 +34,12 @@ const Chat = ({  }) => {
         alert(error);
       }
     });
-  }, [ENDPOINT, window.location.search]);
+
+    return () => {
+      socket.disconnect();
+      socket.off();
+    }
+  }, [ENDPOINT, location.search]);
   
   useEffect(() => {
     socket.on('message', message => {
@@ -45,7 +49,7 @@ const Chat = ({  }) => {
     socket.on("roomData", ({ users }) => {
       setUsers(users);
     });
-}, []);
+}, [messages]);
 
   const sendMessage = (event) => {
     event.preventDefault();
